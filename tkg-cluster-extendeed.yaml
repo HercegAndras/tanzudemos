@@ -1,0 +1,29 @@
+apiVersion: run.tanzu.vmware.com/v1alpha1      #TKG API endpoint
+kind: TanzuKubernetesCluster                   #required parameter
+metadata:
+  name: tkg-cluster-02                          #cluster name, user defined
+  namespace: demo-k8-02                          #supervisor namespace
+spec:
+  distribution:
+    fullVersion: null
+    version: v1.17.11
+  topology:
+    controlPlane:
+      count: 1                                 #number of control plane nodes
+      class: best-effort-small                 #vmclass for control plane nodes
+      storageClass: tanzusp
+    workers:
+      count: 3                                 #number of worker nodes
+      class: best-effort-small                 #vmclass for worker nodes
+      storageClass: tanzusp
+  settings:
+    network:
+      cni:
+        name: antrea
+      services:
+        cidrBlocks: ["10.23.1.0/24"]        #Cannot overlap with Supervisor Cluster
+      pods:
+        cidrBlocks: ["10.23.2.0/24"]           #Cannot overlap with Supervisor Cluster
+    storage:
+      classes: ["tanzusp"]
+      defaultClass: tanzusp
